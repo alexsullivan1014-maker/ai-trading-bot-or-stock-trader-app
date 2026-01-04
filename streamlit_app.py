@@ -117,13 +117,13 @@ else:
     def load_or_train_model(symbol, df, initial_balance, timesteps):
     model_path = "ppo_stock_trader.zip"
     if os.path.exists(model_path):
-        st.success("Loaded pre-trained model! 🚀")
-        return PPO.load(model_path)
+    st.success("Loaded pre-trained model! 🚀")
+    return PPO.load(model_path)
     else:
-        st.error("No pre-trained model found (ppo_stock_trader.zip missing).")
-        st.info("Training on Streamlit Cloud will likely crash due to low memory. "
-                "Pre-train locally on a computer and upload the ppo_stock_trader.zip file.")
-        return None
+    st.error("No pre-trained model found (ppo_stock_trader.zip missing).")
+    st.info("Training on Streamlit Cloud will likely crash due to low memory. "
+    "Pre-train locally on a computer and upload the ppo_stock_trader.zip file.")
+    return None
     
     st.subheader("Backtesting Results")
     run_backtest(model, SYMBOL, df, initial_balance)
