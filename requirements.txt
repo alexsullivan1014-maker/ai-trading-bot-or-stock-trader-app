@@ -1,0 +1,10 @@
+streamlit
+yfinance
+stable-baselines3
+gymnasium
+ta
+alpaca-py
+matplotlib
+pandas
+numpy
+torch  # Needed for stable-baselines3
