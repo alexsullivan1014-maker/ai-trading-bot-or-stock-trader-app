@@ -27,7 +27,7 @@ st.warning("This is for educational purposes only. Trading involves high risk of
 with st.sidebar:
     st.header("Settings")
     SYMBOL = st.text_input("Stock Symbol", value="AAPL").upper()
-   train_timesteps = st.number_input("Training Timesteps (cloud can't handle large numbers!)", value=5000, min_value=1000, max_value=10000)
+    train_timesteps = st.number_input("Training Timesteps (cloud can't handle large numbers!)", value=5000, min_value=1000, max_value=10000)
     
     st.header("Alpaca API (Paper Trading Recommended)")
     use_paper = st.checkbox("Use Paper Trading", value=True)
