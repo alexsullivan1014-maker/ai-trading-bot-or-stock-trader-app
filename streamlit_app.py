@@ -63,21 +63,20 @@ class StockTradingEnv(gym.Env):
 
 def fetch_data(symbol, start='2020-01-01'):
     return yf.download(symbol, start=start, end=pd.Timestamp.today().strftime('%Y-%m-%d'))
-
-# Train or load model
-@st.cache_resource
-def load_or_train_model(symbol, _df, initial_balance, timesteps):
+    
+def load_or_train_model(symbol, df, initial_balance, timesteps):
     model_path = "ppo_stock_trader.zip"
     if os.path.exists(model_path):
-        model = PPO.load(model_path)
-        st.success("Loaded existing model")
-    else:
-        with st.spinner("Training new model (this may take several minutes)..."):
-            env = DummyVecEnv([lambda: StockTradingEnv(_df, initial_balance)])
-            model = PPO('MlpPolicy', env, verbose=0)
-            model.learn(total_timesteps=timesteps)
-            model.save(model_path)
-            st.success("Training complete & model saved")
+        st.success("Loaded existing trained model")
+        return PPO.load(model_path)
+    
+    st.warning("No pre-trained model found. Training a new one now – this will take 5-15 minutes and may fail on free Streamlit tier due to resource limits!")
+    with st.spinner("Training in progress... (be patient)"):
+        env = DummyVecEnv([lambda: StockTradingEnv(df, initial_balance)])
+        model = PPO('MlpPolicy', env, verbose=0)  # verbose=0 to reduce output spam
+        model.learn(total_timesteps=timesteps)
+        model.save(model_path)
+        st.success("Training complete! Model saved.")
     return model
 
 # Backtest with visualization
