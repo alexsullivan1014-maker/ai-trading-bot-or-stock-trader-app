@@ -27,8 +27,7 @@ st.warning("This is for educational purposes only. Trading involves high risk of
 with st.sidebar:
     st.header("Settings")
     SYMBOL = st.text_input("Stock Symbol", value="AAPL").upper()
-    initial_balance = st.number_input("Initial Balance for Backtest", value=10000)
-    train_timesteps = st.number_input("Training Timesteps", value=100000)
+   train_timesteps = st.number_input("Training Timesteps (cloud can't handle large numbers!)", value=5000, min_value=1000, max_value=10000)
     
     st.header("Alpaca API (Paper Trading Recommended)")
     use_paper = st.checkbox("Use Paper Trading", value=True)
@@ -67,17 +66,13 @@ def fetch_data(symbol, start='2020-01-01'):
 def load_or_train_model(symbol, df, initial_balance, timesteps):
     model_path = "ppo_stock_trader.zip"
     if os.path.exists(model_path):
-        st.success("Loaded existing trained model")
+        st.success("Loaded pre-trained model! 🚀")
         return PPO.load(model_path)
-    
-    st.warning("No pre-trained model found. Training a new one now – this will take 5-15 minutes and may fail on free Streamlit tier due to resource limits!")
-    with st.spinner("Training in progress... (be patient)"):
-        env = DummyVecEnv([lambda: StockTradingEnv(df, initial_balance)])
-        model = PPO('MlpPolicy', env, verbose=0)  # verbose=0 to reduce output spam
-        model.learn(total_timesteps=timesteps)
-        model.save(model_path)
-        st.success("Training complete! Model saved.")
-    return model
+    else:
+        st.error("No pre-trained model found (ppo_stock_trader.zip missing).")
+        st.info("Training on Streamlit Cloud will likely crash due to low memory. "
+                "Please pre-train the model locally on a computer and upload the ppo_stock_trader.zip file to this repo.")
+        return None  # Stops everything safely if no model
 
 # Backtest with visualization
 def run_backtest(model, symbol, df, initial_balance):
