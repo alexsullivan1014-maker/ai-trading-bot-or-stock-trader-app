@@ -7,4 +7,4 @@ alpaca-py
 matplotlib
 pandas
 numpy
-torch  # Needed for stable-baselines3
+torch>=2.0
