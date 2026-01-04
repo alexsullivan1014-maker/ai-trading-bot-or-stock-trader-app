@@ -1,0 +1,11 @@
+[global]
+theme = "light"  # or "dark"
+
+[server]
+headless = true
+port = 8501
+enableCORS = false
+enableXsrfProtection = false
+
+[ui]
+hideTopBar = false
